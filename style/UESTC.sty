@@ -1,0 +1,165 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{./style/UESTC}[2024/12/28 UESTC Beamer theme]
+
+\title{\titleinfo}
+\subtitle{\subtitleinfo}
+\author{\authorinfo}
+\institute{\instituteinfo}
+\date{\publicationdate}
+
+% 设置Beamer标题页模板（titlepage）
+\setbeamertemplate{title page}
+{
+    \vbox{
+        \vskip1.2em % 顶部边距1.2em
+        
+        % 标题区块
+        \begin{beamercolorbox}[
+            sep=8pt,           % 内部间距
+            center,            % 居中对齐
+            rounded=true,      % 圆角边框
+            shadow=true        % 添加阴影
+        ]{title}
+            \usebeamerfont{title}\inserttitle\par
+            \ifx
+                \insertsubtitle\@empty
+            \else
+                \vskip0.5em
+                \usebeamerfont{subtitle}
+                \usebeamercolor[fg]{subtitle}\insertsubtitle\par
+            \fi
+        \end{beamercolorbox}
+        
+        \vskip0.5em
+        
+        % 作者区块
+        \begin{beamercolorbox}[
+            sep=8pt,           % 内部间距
+            center             % 居中对齐
+        ]{author}
+            \setbeamerfont{author}{size=\small}
+            \usebeamerfont{author}\insertauthor
+        \end{beamercolorbox}
+        
+        \vskip-0.5em
+        
+        % 机构区块
+        \begin{beamercolorbox}[
+            sep=8pt,           % 内部间距
+            center             % 居中对齐
+        ]{institute}
+            \setbeamerfont{institute}{size=\small}
+            \usebeamerfont{institute}\insertinstitute
+        \end{beamercolorbox}
+            
+        \vskip-0.2em
+
+        \begin{beamercolorbox}[
+            sep=8pt,       % 内部间距
+            center         % 居中对齐
+        ]{beamer color}
+            \setbeamerfont{institute}{size=\small}
+            \usebeamerfont{institute}\journalinfo
+        \end{beamercolorbox}
+
+        \vskip-0.8em
+            
+        % 日期区块
+        \begin{beamercolorbox}[
+            sep=8pt,       % 内部间距
+            center         % 居中对齐
+        ]{date}
+            \setbeamerfont{date}{size=\small} 
+            \usebeamerfont{date}\insertdate
+        \end{beamercolorbox}
+    }
+}
+
+% 设置Beamer的顶部导航区（headline）
+\useoutertheme[subsection=false]{smoothbars}
+
+% 设置Beamer的底部导航区（footline）
+\makeatletter
+\newcommand{\frameofframes}{/}  % 定义页码分隔符样式，例如：1/10
+\newcommand{\setframeofframes}[1]{\renewcommand{\frameofframes}{#1}}
+\makeatother
+\setbeamertemplate{footline} 
+{
+    \begin{beamercolorbox}
+        [colsep=1.5pt]{upper separation line foot} % 上分隔线
+    \end{beamercolorbox}
+    
+    % 作者和机构信息栏
+    \begin{beamercolorbox}[
+        ht=2.5ex,                   % 高度
+        dp=1.125ex,                 % 深度
+        leftskip=.3cm,              % 左边距
+        rightskip=.3cm plus1fil     % 右边距，plus1fil允许弹性伸展
+    ]{author in head/foot}
+        \leavevmode{\usebeamerfont{author in head/foot}\reporter}
+        \hfill
+        \usebeamerfont{institute in head/foot}
+        \usebeamercolor[fg]{institute in head/foot}\reportdate
+    \end{beamercolorbox}
+    
+    % 标题和页码信息栏
+    \begin{beamercolorbox}[
+        ht=2.5ex,
+        dp=1.125ex,
+        leftskip=.3cm,
+        rightskip=.3cm plus1fil
+    ]{title in head/foot}
+        \usebeamerfont{title in head/foot}\insertshorttitle
+        \hfill
+        \usebeamerfont{frame number}
+        \usebeamercolor[fg]{frame number}
+        \insertframenumber~\frameofframes~\inserttotalframenumber
+    \end{beamercolorbox}
+    
+    \begin{beamercolorbox}
+        [colsep=1.5pt]{lower separation line foot} % 下分隔线
+    \end{beamercolorbox}
+}
+
+% 去掉Beamer的导航符、左侧栏和右侧栏（sidebar）
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{sidebar left}{}
+\setbeamertemplate{sidebar right}{}
+
+% 设置无序列表样式为圆点（默认为三角形）
+\setbeamertemplate{itemize items}[circle]
+
+% 设置定理环境
+\setbeamertemplate{theorems}[numbered]               % 定理编号
+\newtheorem{lem}{引理}                                % 定义引理环境
+\newtheorem{thm}{定理}                                % 定义定理环境
+\newtheorem{define}{定义}                             % 定义定义环境
+% 设置定理模板
+\setbeamertemplate{lem}[numbered]                     % 引理编号
+\setbeamertemplate{thm}[numbered]                     % 定理编号
+\setbeamertemplate{define}[numbered]                  % 定义编号
+\setbeamertemplate{blocks}[rounded][shadow=true]      % 圆角阴影区块
+
+% 设置颜色主题
+\xdefinecolor{uestc}{rgb}{0.067,0.369,0.635}          % 电子科技大学蓝 RGB #115EA2
+\setbeamercolor{title}{bg=uestc,fg=white}             % 标题背景色为电子科大蓝
+\setbeamercolor{structure}{fg=uestc}                  % 结构元素使用电子科大蓝
+% 使用调色板来设置 footline、outline 和 framename 的颜色
+\setbeamercolor{palette primary}{use=structure,fg=white,bg=structure.fg}
+\setbeamercolor{palette secondary}{use=structure,fg=white,bg=structure.fg!75!black}
+\setbeamercolor{palette tertiary}{use=structure,fg=white,bg=structure.fg!50!black}
+\setbeamercolor{palette quaternary}{fg=white,bg=structure.fg!50!black}
+\xdefinecolor{greywhite}{rgb}{0.914,0.914,0.953}      % 浅灰白色 RGB 233 233 243
+% 设置区块颜色
+\setbeamercolor{block title}{bg=uestc,fg=white}
+\setbeamercolor{block body}{bg=greywhite}
+\setbeamercolor*{block title example}{use={normal text,example text},bg=white,fg=uestc}
+
+% 其他设置
+\setbeamerfont{frametitle}{size=\large}         % 设置幻灯片标题字号
+\setbeamertemplate{caption}[numbered]           % 给图表标题自动编号
+\setbeamertemplate{bibliography item}[text]     % 参考文献样式
+\usefonttheme{professionalfonts}                % 使用专业数学字体
+\usepackage{calligra}                           % 用于生成最后一页花体的 Thanks!
+
+% 你可以在这里继续添加自己的 slide 模板设置...

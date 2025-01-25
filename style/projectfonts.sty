@@ -1,0 +1,68 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{./style/projectfonts}[2024/12/28 Custom fonts package]
+
+% 英文字体设置
+\RequirePackage{fontspec}
+
+\setmainfont{Times}[          % 衬线字体
+    Path = ./fonts/,
+    Extension = .ttf,
+    BoldFont = timesbd,       % 粗体
+    ItalicFont = timesi,      % 斜体
+    BoldItalicFont = timesbi  % 粗斜体
+]
+
+\setsansfont{Arial}[          % 无衬线字体
+    Path = ./fonts/,
+    Extension = .ttf,
+    BoldFont = arialbd,       % 粗体
+    ItalicFont = ariali,      % 斜体
+    BoldItalicFont = arialbi  % 粗斜体
+]
+
+\setmonofont{Ubuntu Mono derivative Powerline}[  % 等宽字体
+    Path = ./fonts/,
+    Extension = .ttf,
+    BoldFont = {Ubuntu Mono derivative Powerline Bold},                 % 粗体
+    ItalicFont = {Ubuntu Mono derivative Powerline Italic},             % 斜体
+    BoldItalicFont = {Ubuntu Mono derivative Powerline Bold Italic}     % 粗斜体
+]
+
+% 中文字体设置
+\RequirePackage{xeCJK}
+
+\setCJKmainfont{SimSun}[            % 中文衬线字体
+    Path = ./fonts/,
+    Extension = .ttc,
+    BoldFont = simhei.ttf,          % 用黑体代替粗体
+    ItalicFont = SimSun,            % 用宋体的伪斜体
+    BoldItalicFont = simhei.ttf     % 用黑体的伪斜体
+]
+
+\setCJKsansfont{SimHei}[            % 中文无衬线字体
+    Path = ./fonts/,
+    Extension = .ttf,
+    BoldFont = simhei.ttf,          % 继续使用黑体
+    ItalicFont = simhei.ttf,        % 用黑体的伪斜体
+    BoldItalicFont = simhei.ttf     % 用黑体的伪斜体
+]
+
+\setCJKmonofont{SimHei}[            % 中文等宽字体
+    Path = ./fonts/,
+    Extension = .ttf,
+    BoldFont = simhei.ttf,          % 继续使用黑体
+    ItalicFont = simhei.ttf,        % 用黑体的伪斜体
+    BoldItalicFont = simhei.ttf     % 用黑体的伪斜体
+]
+
+% 定义中文字号，参考 GB/T 9704-2012 标准
+\newcommand{\yihao}{\fontsize{26pt}{36pt}\selectfont}           % 一号字
+\newcommand{\erhao}{\fontsize{22pt}{28pt}\selectfont}           % 二号字
+\newcommand{\xiaoer}{\fontsize{18pt}{18pt}\selectfont}          % 小二号字
+\newcommand{\sanhao}{\fontsize{16pt}{24pt}\selectfont}          % 三号字
+\newcommand{\xiaosan}{\fontsize{15pt}{22pt}\selectfont}         % 小三号字
+\newcommand{\sihao}{\fontsize{14pt}{21pt}\selectfont}           % 四号字
+\newcommand{\banxiaosi}{\fontsize{13pt}{19.5pt}\selectfont}     % 半小四号字
+\newcommand{\xiaosi}{\fontsize{12pt}{18pt}\selectfont}          % 小四号字
+\newcommand{\dawuhao}{\fontsize{11pt}{11pt}\selectfont}         % 大五号字
+\newcommand{\wuhao}{\fontsize{10.5pt}{15.75pt}\selectfont}      % 五号字

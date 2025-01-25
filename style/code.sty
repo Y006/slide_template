@@ -1,0 +1,147 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{./style/code}[2024/12/28 Custom fonts package]
+
+% --- 1. 相关宏包加载 ---------------------------------------
+
+\usepackage{color}      % 提供最基本的颜色命令（\textcolor 等）
+\usepackage{xcolor}     % 进一步扩展颜色功能（定义RGB、HTML等多种格式）
+\usepackage{fancyvrb}   % 增强的 verbatim 环境，支持对代码块进行自定义格式化
+
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+  xleftmargin=0pt,   % 左侧缩进
+  xrightmargin=0pt,  % 右侧缩进
+  frame=none         % 如果有边框，也可去掉
+}
+
+% 新增：加载 tcolorbox 用于实现带背景色、圆角的方框
+\usepackage[most]{tcolorbox}
+
+% --- 2. Verbatim 环境配置 -----------------------------------
+
+% \VerbBar 用于在 Verbatim 环境中表示竖线 '|' 字符
+\newcommand{\VerbBar}{|}
+
+% 定义 \VERB 命令，用于直接在文本中插入 verbatim 代码
+% 其中 commandchars=\\\{\} 表示在 verbatim 环境中，
+% 反斜杠 '\'、大括号 '{' 和 '}' 依然作为命令控制字符。
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+
+% 定义一个名为 Highlighting 的 Verbatim 环境，
+% 用于在代码块中识别特定命令字符，以便实现高亮。
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+
+% --- 2.1 定义 Shaded 环境，让其具有浅灰色背景 & 圆角 -----------
+
+% 定义浅灰色(248,248,248 ≈ 0.97,0.97,0.97)
+\definecolor{shadedbg}{rgb}{0.97,0.97,0.97}
+
+% 使用 tcolorbox 来定义 Shaded 环境
+\newenvironment{Shaded}
+{%
+  % \begin{Shaded} 时执行下列代码：
+  \begin{tcolorbox}[
+    colback=shadedbg,       % 背景色
+    colframe=black!20,      % 边框颜色（可自行调整黑色透明度）
+    boxrule=0pt,            % 边框线宽(0表示无明显边线，仅颜色阴影)
+    arc=4pt,                % 圆角半径
+    left=0pt, right=0pt,    % 文字左右内边距
+    top=5pt, bottom=5pt,    % 文字上下内边距
+    enlarge top by=2pt,     % 调整顶部留白
+    enlarge bottom by=2pt   % 调整底部留白
+  ]
+}
+{%
+  % \end{Shaded} 时执行下列代码：
+  \end{tcolorbox}
+}
+
+% --- 3. 颜色命令定义（Token 高亮规则）------------------------
+
+% 以下命令通过 \textcolor 来给文本染色，并可搭配 \textbf（加粗）、\textit（斜体）等修饰
+% 不同命令对应不同的语法元素（如关键字、注释、字符串、函数等），
+% 在实际的代码高亮过程中，处理器（如 Pandoc、Pygments 等）会将不同的代码片段
+% 以不同的命令包裹，从而达到着色的目的。
+
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+% AlertTok：用于需要红色且加粗显示的文本
+
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+% AnnotationTok：常用来显示特殊注释或关键性提示（青色且加粗、斜体）
+
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+% AttributeTok：一般用于属性名称，暗绿色调
+
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+% BaseNTok：常用来显示数字或基数相关的标记
+
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{#1}}
+% BuiltInTok：显示内置关键字或内置函数（纯绿色）
+
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+% CharTok：可用于单个字符常量或字符串中的特殊字符（蓝色调）
+
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+% CommentTok：显示注释文本，通常呈现为斜体的青色
+
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+% CommentVarTok：可能用于区别某些特殊注释，青色加粗斜体
+
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+% ConstantTok：用于常量字面量（深红色）
+
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+% ControlFlowTok：流程控制关键字，如 if, for, while 等，深绿色加粗
+
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+% DataTypeTok：数据类型相关标记（棕红色）
+
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+% DecValTok：一般用于十进制常量，青绿色
+
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+% DocumentationTok：文档字符串或说明文档，多为红褐色斜体
+
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+% ErrorTok：错误或警告信息，红色加粗
+
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+% FloatTok：浮点数标记，和 DecValTok 同色
+
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+% FunctionTok：函数名，深蓝色
+
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.50,0.00}{\textbf{#1}}}
+% ImportTok：引入或导入命令，绿色加粗
+
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+% KeywordTok：关键字，高亮显示（深绿色加粗）
+
+\newcommand{\NormalTok}[1]{#1}
+% NormalTok：普通文本，保持默认
+
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+% OperatorTok：操作符，灰色
+
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+% OtherTok：可以用来标记与关键字相似但不属于标准关键字的文本（绿色）
+
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+% PreprocessorTok：预处理器命令或宏定义（如 C/C++ 中的 #include 等），褐色
+
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+% SpecialCharTok：转义字符或特殊符号
+
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+% SpecialStringTok：特殊字符串片段，暗粉紫色
+
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+% StringTok：普通字符串，蓝色调
+
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+% VariableTok：变量名，深蓝偏紫
+
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+% VerbatimStringTok：原样显示的字符串，蓝色调
+
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+% WarningTok：警告信息，青色加粗斜体

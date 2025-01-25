@@ -1,0 +1,73 @@
+\begin{frame}[fragile]
+c语言测试代码
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\PreprocessorTok{\#include }\ImportTok{\textless{}stdio.h\textgreater{}}
+\PreprocessorTok{\#include }\ImportTok{\textless{}stdlib.h\textgreater{}}
+\PreprocessorTok{\#include }\ImportTok{\textless{}string.h\textgreater{}}
+
+\CommentTok{// Function to add two numbers}
+\DataTypeTok{int}\NormalTok{ add}\OperatorTok{(}\DataTypeTok{int}\NormalTok{ a}\OperatorTok{,} \DataTypeTok{int}\NormalTok{ b}\OperatorTok{)} \OperatorTok{\{}
+    \ControlFlowTok{return}\NormalTok{ a }\OperatorTok{+}\NormalTok{ b}\OperatorTok{;}
+\OperatorTok{\}}
+
+\DataTypeTok{int}\NormalTok{ main}\OperatorTok{()} \OperatorTok{\{}
+    \DataTypeTok{int}\NormalTok{ x }\OperatorTok{=} \DecValTok{10}\OperatorTok{,}\NormalTok{ y }\OperatorTok{=} \DecValTok{20}\OperatorTok{,}\NormalTok{ result}\OperatorTok{;}
+\NormalTok{    result }\OperatorTok{=}\NormalTok{ add}\OperatorTok{(}\NormalTok{x}\OperatorTok{,}\NormalTok{ y}\OperatorTok{);}
+\NormalTok{    printf}\OperatorTok{(}\StringTok{"The result is: }\SpecialCharTok{\%d\textbackslash{}n}\StringTok{"}\OperatorTok{,}\NormalTok{ result}\OperatorTok{);}
+
+    \CommentTok{// Loop example}
+    \ControlFlowTok{for} \OperatorTok{(}\DataTypeTok{int}\NormalTok{ i }\OperatorTok{=} \DecValTok{0}\OperatorTok{;}\NormalTok{ i }\OperatorTok{\textless{}} \DecValTok{5}\OperatorTok{;}\NormalTok{ i}\OperatorTok{++)} \OperatorTok{\{}
+\NormalTok{        printf}\OperatorTok{(}\StringTok{"Loop index: }\SpecialCharTok{\%d\textbackslash{}n}\StringTok{"}\OperatorTok{,}\NormalTok{ i}\OperatorTok{);}
+    \OperatorTok{\}}
+
+    \ControlFlowTok{return} \DecValTok{0}\OperatorTok{;}
+\OperatorTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+python语言测试代码
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Import necessary libraries}
+\ImportTok{import}\NormalTok{ math}
+\ImportTok{import}\NormalTok{ os}
+
+\CommentTok{\# Function to calculate the square root}
+\KeywordTok{def}\NormalTok{ calculate\_sqrt(number):}
+    \ControlFlowTok{return}\NormalTok{ math.sqrt(number)}
+
+\ControlFlowTok{if} \VariableTok{\_\_name\_\_} \OperatorTok{==} \StringTok{"\_\_main\_\_"}\NormalTok{:}
+\NormalTok{    number }\OperatorTok{=} \DecValTok{16}
+\NormalTok{    result }\OperatorTok{=}\NormalTok{ calculate\_sqrt(number)}
+    \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"The square root of }\SpecialCharTok{\{}\NormalTok{number}\SpecialCharTok{\}}\SpecialStringTok{ is }\SpecialCharTok{\{}\NormalTok{result}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{)}
+
+    \CommentTok{\# Loop example}
+    \ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in} \BuiltInTok{range}\NormalTok{(}\DecValTok{5}\NormalTok{):}
+        \BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"Loop index: }\SpecialCharTok{\{}\NormalTok{i}\SpecialCharTok{\}}\SpecialStringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+matlab语言测试代码
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\% Function to calculate the square root}
+\KeywordTok{function} \VariableTok{result} \OperatorTok{=} \VariableTok{calculate\_sqrt}\NormalTok{(}\VariableTok{number}\NormalTok{)}
+    \VariableTok{result} \OperatorTok{=} \VariableTok{sqrt}\NormalTok{(}\VariableTok{number}\NormalTok{)}\OperatorTok{;}
+\KeywordTok{end}
+
+\CommentTok{\% Main script}
+\VariableTok{number} \OperatorTok{=} \FloatTok{16}\OperatorTok{;}
+\VariableTok{result} \OperatorTok{=} \VariableTok{calculate\_sqrt}\NormalTok{(}\VariableTok{number}\NormalTok{)}\OperatorTok{;}
+\VariableTok{fprintf}\NormalTok{(}\SpecialStringTok{\textquotesingle{}The square root of \%d is \%.2f\textbackslash{}n\textquotesingle{}}\OperatorTok{,} \VariableTok{number}\OperatorTok{,} \VariableTok{result}\NormalTok{)}\OperatorTok{;}
+
+\CommentTok{\% Loop example}
+\KeywordTok{for} \VariableTok{i} \OperatorTok{=} \FloatTok{1}\OperatorTok{:}\FloatTok{5}
+    \VariableTok{fprintf}\NormalTok{(}\SpecialStringTok{\textquotesingle{}Loop index: \%d\textbackslash{}n\textquotesingle{}}\OperatorTok{,} \VariableTok{i}\NormalTok{)}\OperatorTok{;}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+\end{frame}
