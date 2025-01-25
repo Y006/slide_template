@@ -4,6 +4,11 @@
 
 编译这个模版请使用配方： xelatex->bibtex->xelatex->xelatex.
 
+## 模版展示
+![展示图1](pictures/展示1.png)
+![展示图2](pictures/展示2.png)
+![展示图3](pictures/展示3.png)
+
 ## 模版使用方法
 TODO
 
