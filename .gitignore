@@ -8,7 +8,7 @@
 !/code
 
 !main.tex
-# !main.pdf
+!main.pdf
 !README.md
 !.gitignore
 !*.bib
