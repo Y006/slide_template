@@ -4,6 +4,8 @@
 
 编译这个模版请使用配方： `xelatex->bibtex->xelatex->xelatex`.
 
+推荐使用 [Pympress](https://github.com/Cimbali/pympress) 进行演示。
+
 ## 模版展示
 ![展示图1](pictures/展示1.png)
 ![展示图2](pictures/展示2.png)
