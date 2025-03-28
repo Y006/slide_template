@@ -255,6 +255,76 @@
     \end{proof}
 \end{frame}
 
+\begin{frame}{四分块的展示}
+    \vspace{-1.8em}
+    \tiny
+    \begin{columns}[t]  % [t] 使内容顶部对齐
+        % 左侧列
+        \begin{column}{0.5\textwidth}
+            \begin{block}{\scriptsize 第一个块的名称}
+                测试第一个块
+            \end{block}
+            \begin{block}{\scriptsize 第二个块的名称}
+                展示第二个块，包括列表和公式
+                \begin{itemize}
+                    \item 这是一个列表
+                    \item 这是一个列表
+                    \item 这是一个列表
+                    \item 这是一个列表
+                \end{itemize}
+                下面是一个公式展示
+                \begin{equation}
+                    \label{eq:2}
+                    E=mc^2
+                \end{equation}
+                进行较长的内容展示，以便更好的展示效果。
+                这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的文字\\
+                如果在块中公式太长了：\\
+                $y=x_1+x_2+x3+x_4+x_5+x_6+x_7+x_8+x_9+x_{10}+x_{11}+x_{12}+x_{13}+x_{14}$
+                \vspace{-1.5em}
+                \begin{center}
+                    \scalebox{0.7}{$y=x_1+x_2+x3+x_4+x_5+x_6+x_7+x_8+x_9+x_{10}+x_{11}+x_{12}+x_{13}+x_{14}$}
+                \end{center}
+            \end{block}
+        \end{column}
+        % 右侧列
+        \begin{column}{0.5\textwidth}
+            \begin{block}{\scriptsize 第三个块的名称}
+                \begin{columns}[t]  % [t] 使内容顶部对齐
+                    % 左侧列
+                    \begin{column}{0.5\textwidth}
+                        \begin{itemize}
+                            \item 这是一个列表
+                            \item 这是一个列表
+                            \item 这是一个列表
+                            \item 这是一个列表
+                        \end{itemize}
+                    \end{column}
+                    % 右侧列
+                    \hspace{-3em}
+                    \begin{column}{0.5\textwidth}
+                        \vspace{-2em}
+                        \begin{column}{0.5\textwidth}
+                            \begin{figure}
+                                \centering
+                                \includegraphics[width=\textwidth]{logo.pdf}
+                                % 在 block 中不是很适合添加标题
+                                \label{fig:figinblock}
+                            \end{figure}
+                        \end{column}
+                    \end{column}
+                \end{columns}
+            \end{block}	
+            \begin{block}{\scriptsize 第四个块的名称}
+                \begin{itemize}
+                    \item 这是一个列表
+                \end{itemize}
+                \raggedright 
+            \end{block}	
+        \end{column}
+    \end{columns}
+\end{frame}
+
 \section{代码}
 
 \begin{frame}{介绍}
