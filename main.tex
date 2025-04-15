@@ -28,6 +28,9 @@
 % 用于实现伪代码的宏包
 \usepackage{algorithm}
 \usepackage{algorithmic}
+% 用于实现公式标注的内容
+\usetikzlibrary{tikzmark}
+\newcommand{\highlight}[2]{\textcolor{#1}{#2}}
 
 % ========================== 处理警告信息 ==========================
 \vfuzz=100pt % 忽略 overfull \vbox 的警告
@@ -198,6 +201,30 @@
                 \item 是“211工程”、“985工程优势学科创新平台”重点建设高校。
                 \item logo如图\ref{fig:columnfig}所示。
             \end{itemize}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{图片3}
+    这里展示使用 tikz 来绘制插图。\\
+    \begin{columns}[t]  % [t] 使内容顶部对齐
+        % 左侧列
+        \begin{column}{0.3\textwidth}
+            \begin{figure}[!ht]
+                \centering
+                \includegraphics[width=0.4\textwidth]{tikz/pic1/pic.pdf}
+                \caption{示例图片}
+                \label{fig:pic1}
+            \end{figure}
+        \end{column}
+        % 右侧列
+        \begin{column}{0.7\textwidth}
+            \begin{figure}[!ht]
+                \centering
+                \includegraphics[width=\textwidth]{tikz/net/pic.pdf}
+                \caption{示例图片}
+                \label{fig:net}
+            \end{figure}
         \end{column}
     \end{columns}
 \end{frame}
@@ -500,6 +527,157 @@
     跳转按钮可以改变颜色，且放置在任何位置，例如页面左下角。\\
     \vspace{2cm}
     \hyperlink{jump1}{\beamergotobutton{跳转}}
+\end{frame}
+
+\section{新增加的模版}
+
+\begin{frame}{新的四分块}
+    \begingroup  % 局部作用域
+    
+    % ========================== 本页专用设置 ==========================
+    % 四分块意味着整个页面展示的内容比较多，因此可能需要对默认的字体进行更换（更换为更小的字体）
+    % 因为无序列表和有序列表都是固定的字号，因此在这里对无序列表和有序列表进行了局部的重新定义
+    % 图片的标号使用的字号也是在固定的，这里还没有进行重新定义，是一个 TODO 项目
+    \def\fbtitlefont{\scriptsize}
+    \def\fbfont{\tiny}
+
+    \newenvironment{il}{%
+    \begingroup
+    \let\originalitemcommand\item
+    \renewcommand{\item}{\originalitemcommand\fbfont}
+    \setbeamertemplate{itemize item}{\fbfont$\bullet$}
+    \setbeamertemplate{itemize subitem}{\fbfont$\bullet$}
+    \begin{itemize}%
+        \setlength{\itemsep}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \setlength{\leftskip}{-1em}%
+    }{%
+    \end{itemize}
+    \endgroup
+    }
+    \newenvironment{el}{%
+    \begingroup
+    \let\originalenumcommand\item
+    \renewcommand{\item}{\originalenumcommand\fbfont}
+    \begin{enumerate}%
+        \setlength{\itemsep}{0pt}%
+        \setlength{\parskip}{0pt}%
+        \setlength{\leftskip}{-1em}%
+    }{%
+    \end{enumerate}
+    \endgroup
+    }
+
+    % ========================== 四分块开始的地方 ==========================
+    % 每一个minipage都是一个块，分为左上、左下、右上、右下
+    \begin{columns}[t]
+        \begin{column}{0.5\textwidth}
+            % ========================== 左上开始 ==========================
+            \begin{minipage}[t]{\linewidth}
+                \fbtitlefont
+                左上标题\par
+                \vspace{-0.5em}
+                \textcolor{uestc}{\rule{\linewidth}{0.5pt}}\par
+                \vspace{0.5em}
+                \fbfont % 左上正文开始的地方：
+                测试第一个块
+            \end{minipage}
+            % ========================== 左上结束 ==========================
+        
+            \vspace{1em}
+
+            % ========================== 左下开始 ==========================
+            \begin{minipage}{\linewidth}
+                \fbtitlefont
+                左下标题\par
+                \vspace{-0.5em}
+                \textcolor{uestc}{\rule{\linewidth}{0.5pt}}\par
+                \vspace{0.5em}
+                \fbfont % 左下正文开始的地方：
+                展示第二个块，主要测试列表：
+                \begin{el}
+                    \item 第一项
+                    \begin{il}
+                        \item 第一项的第一个子项，这是一个非常非常非常非常非常长的子项，用来展示换行的效果。
+                        \item 第一项的第二个子项
+                    \end{il}
+                    \item 第二项
+                    \begin{il}
+                        \item 第二项的第一个子项，这是一个较长的子项，用来展示效果。
+                        \item 第二项的第二个子项
+                    \end{il}
+                    \item 第三项，这是一个非常非常非常非常非常非常非常非常非常长的项，用来展示换行的效果。
+                \end{el}
+            \end{minipage}
+            % ========================== 左下结束 ==========================
+        \end{column}
+        
+        \begin{column}{0.5\textwidth}
+            % ========================== 右上开始 ==========================
+            \begin{minipage}[t]{\linewidth}
+                \fbtitlefont
+                右上标题\par
+                \vspace{-0.5em}
+                \textcolor{uestc}{\rule{\linewidth}{0.5pt}}\par
+                \vspace{0.5em}
+                \fbfont % 右上正文开始的地方：
+                \begin{figure}
+                    \centering
+                    \includegraphics[height=2cm]{logo.pdf}
+                    % \caption{电子科技大学校徽}
+                    \label{fig:four-block-fig}
+                \end{figure}
+            \end{minipage}
+            % ========================== 右上结束 ==========================
+        
+            \vspace{1em}
+        
+            % ========================== 右下开始 ==========================
+            \begin{minipage}{\linewidth}
+                \fbtitlefont
+                右下标题\par
+                \vspace{-0.5em}
+                \textcolor{uestc}{\rule{\linewidth}{0.5pt}}\par
+                \vspace{0.5em}
+                \fbfont % 右下正文开始的地方：
+                上面的图片内容是电子科技大学的校徽，
+
+                展示了一个图片的效果。
+            \end{minipage}
+            % ========================== 右下结束 ==========================
+        \end{column}
+    \end{columns}
+    
+    \endgroup
+\end{frame}
+
+\begin{frame}{新的公式展示方案}
+    来源于：\texttt{https://github.com/synercys/annotated\_latex\_equations}
+    
+    现在已经可以在这上面使用了，使用方法如下：
+
+    \par \vspace{4em}
+
+    \tikzset{remember picture, overlay}
+
+    \[
+    \Pr[\tikzmarknode{x}{\mathcal{X}}(\cdot) \in \tikzmarknode{s}{\mathcal{S}}] \leq e^\epsilon \cdot \Pr[\mathcal{X}(\cdot) \in \mathcal{S}]
+    \]
+
+    \begin{tikzpicture}[overlay, remember picture, >=stealth, nodes={align=left, inner ysep=1pt}, <-]
+        % 标注 x
+        \path (x.north) ++ (-4em,2em)
+        node[anchor=south, color=blue!67, align=left, xshift=2em] (x_label)
+        {\scriptsize system \\ 
+        \scriptsize state};
+        \draw [color=blue!87] (x.north) |- ([xshift=-2em] x_label.south);
+
+        % 标注 s
+        \path (s.south) ++ (4em,-2em)
+        node[anchor=north, color=red!67, align=left, xshift=-2em] (s_label)
+        {\scriptsize $\mathcal{S} \subseteq \mathrm{Range}(\mathcal{X})$};
+        \draw [color=red!87] (s.south) |- ([xshift=2em] s_label.north);
+    \end{tikzpicture}
 \end{frame}
 
 \section{参考文献与致谢}

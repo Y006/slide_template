@@ -1,17 +1,17 @@
 # 忽略所有文件
 /*
 
-# # 例外规则：明确要跟踪的内容
-!/pictures
-!/style
-!/fonts
-!/code
-
+# 例外规则：明确要跟踪的内容
+!/pictures/
+!/style/
+!/fonts/
+!/code/
 !main.tex
 !main.pdf
 !README.md
 !.gitignore
 !*.bib
 
-# 额外添加跟踪所有 .pdf 文件
-# !*.pdf
+/pictures/tikz/**/*.gz
+/pictures/tikz/**/*.aux
+/pictures/tikz/**/*.log
