@@ -8,7 +8,7 @@
     - 如果需要参考文献，请使用配方：`xelatex -> bibtex -> xelatex -> xelatex`.
     - 如果需要公式标注，请使用配方：`xelatex -> xelatex -> xelatex -> xelatex`.
 - 更推荐的方法：
-    - 使用项目的 makefile 文件来进行编译，使用方法见：`make h`（终端输入，注意此 makefile 仅在 macos 上进行验证）
+    - 使用项目的 makefile 文件来进行编译，使用方法见：`make h`（终端输入，注意此 makefile 仅在 macos 上进行验证，win 可以尝试使用 bash）
 
 推荐使用 [Pympress](https://github.com/Cimbali/pympress) 进行演示。
 
