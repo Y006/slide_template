@@ -15,3 +15,5 @@
 /pictures/tikz/**/*.gz
 /pictures/tikz/**/*.aux
 /pictures/tikz/**/*.log
+
+!makefile

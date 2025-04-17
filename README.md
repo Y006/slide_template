@@ -2,7 +2,13 @@
 
 这是一个电子科技大学的 Beamer 模版，模版主要参考了[张冬呈的模版](https://www.overleaf.com/latex/templates/uestc-beamer-theme/ybqzdsgvrfdq)。修改后的模版可以帮助我快速制作一份精美的组会汇报 slide.
 
-编译这个模版请使用配方： `xelatex->bibtex->xelatex->xelatex`.
+编译方法：
+- 配方：
+    - 如果不需要参考文献和公式标注，请使用配方：`xelatex->xelatex`.
+    - 如果需要参考文献，请使用配方：`xelatex -> bibtex -> xelatex -> xelatex`.
+    - 如果需要公式标注，请使用配方：`xelatex -> xelatex -> xelatex -> xelatex`.
+- 更推荐的方法：
+    - 使用项目的 makefile 文件来进行编译，使用方法见：`make h`（终端输入，注意此 makefile 仅在 macos 上进行验证）
 
 推荐使用 [Pympress](https://github.com/Cimbali/pympress) 进行演示。
 
