@@ -1,102 +1,39 @@
-# Makefile for LaTeX documents
-FILENAME=main
-TEXFILE=$(FILENAME).tex
+TEXFILE = main.tex
+FILENAME = main
 
-# 编译选项：1=xelatex两次, 2=含bibtex, 3=四次xelatex
-M ?= 1
+# 从 main.tex 读取标记
+COMPILE_CHAIN := $(shell grep '^% *!compile_chain' $(TEXFILE) | sed 's/.*= *//')
+CLEAN_MID := $(shell grep '^% *!clean_midfiles' $(TEXFILE) | sed 's/.*= *//')
 
-.PHONY: main tikz cl h ch
-
+# 默认目标
 main:
-ifeq ($(M),1)
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第一次编译失败\033[0m"; exit 1; \
-	fi
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第二次编译失败\033[0m"; exit 1; \
-	fi
-	@echo "🔁 编译模式 1：xelatex -> xelatex"
-	@echo "✅ 编译完成！"
-endif
-ifeq ($(M),2)
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第一次编译失败\033[0m"; exit 1; \
-	fi
-	@bibtex $(FILENAME)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ bibtex 编译失败\033[0m"; \
-		echo "📌 请确保 \\bibliography{} 和 \\bibliographystyle{} 存在，或使用 biber"; \
-		exit 1; \
-	fi
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第二次编译失败\033[0m"; exit 1; \
-	fi
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第三次编译失败\033[0m"; exit 1; \
-	fi
-	@echo "🔁 编译模式 2：xelatex -> bibtex -> xelatex -> xelatex"
-	@echo "✅ 编译完成！"
-endif
-ifeq ($(M),3)
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第一次编译失败\033[0m"; exit 1; \
-	fi
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第二次编译失败\033[0m"; exit 1; \
-	fi
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第三次编译失败\033[0m"; exit 1; \
-	fi
-	@xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE)
-	@if [ $$? -ne 0 ]; then \
-		echo "\033[31m❌ 第四次编译失败\033[0m"; exit 1; \
-	fi
-	@echo "🔁 编译模式 3：xelatex -> xelatex -> xelatex -> xelatex"
-	@echo "✅ 编译完成！"
-endif
+	@echo "🧠 检测编译链: $(COMPILE_CHAIN)"
+	@echo "🧹 是否清理中间文件: $(CLEAN_MID)"
+	@echo "🚀 开始编译..."
 
-	@echo "是否清理中间文件？(y/n)"
-	@read -n 1 clanswer; echo ""; \
-	if [ "$$clanswer" = "y" ]; then \
+	@echo "$(COMPILE_CHAIN)" | sed 's/->/\n/g' | while read cmd; do \
+		cmd=$$(echo $$cmd | xargs); \
+		echo "🔧 执行指令：$$cmd"; \
+		if [ "$$cmd" = "xelatex" ]; then \
+			xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE) >> build.log 2>&1; \
+		elif [ "$$cmd" = "bibtex" ]; then \
+			bibtex $(FILENAME) >> build.log 2>&1; \
+		elif [ "$$cmd" = "biber" ]; then \
+			biber $(FILENAME) >> build.log 2>&1; \
+		else \
+			echo "\033[33m⚠️ 未知命令：$$cmd\033[0m"; \
+		fi; \
+		if [ $$? -ne 0 ]; then \
+			echo "\033[31m❌ 编译阶段 $$cmd 失败\033[0m"; \
+			echo "🔍 请检查 build.log 获取详细错误信息"; \
+			exit 1; \
+		fi; \
+	done
+
+	@echo "✅ 编译完成！"
+
+	@if [ "$(CLEAN_MID)" = "true" ]; then \
 		$(MAKE) cl; \
-	else \
-		echo "❌ 未清理中间文件"; \
-	fi
-
-	@echo "是否清除终端输出？(y/n)"
-	@read -n 1 answer; echo ""; \
-	if [ "$$answer" = "y" ]; then \
-		clear; \
-		echo "✅ 清除终端输出！"; \
-	else \
-		echo "❌ 未清除终端输出"; \
-	fi
-
-tikz:
-	@if [ -z "$(F)" ]; then \
-		echo "❌ 请输入 tikz 文件路径：make tikz F=路径/文件名（不加.tex）"; \
-		exit 1; \
-	fi
-	@echo "🛠️  正在编译 pictures/tikz/$(F).tex ..."
-	@xelatex -output-directory=$(dir pictures/tikz/$(F)) pictures/tikz/$(F).tex || \
-	( echo "\033[31m❌ 编译失败，终止 Make\033[0m"; exit 1 )
-	@rm -f pictures/tikz/$(F).aux pictures/tikz/$(F).log pictures/tikz/$(F).synctex.gz
-	@echo "✅ 编译完成，并已清除中间文件"
-	@echo "是否清除终端输出？(y/n)"
-	@read -n 1 answer; \
-	if [ "$$answer" = "y" ]; then \
-		clear; \
-		echo "✅ 清除完成！"; \
-	else \
-		echo "❌ 未清除终端输出"; \
 	fi
 
 cl:
@@ -107,21 +44,36 @@ cl:
 h:
 	@echo ""
 	@echo "📘 LaTeX Makefile 使用指南"
-	@echo "本 Makefile 提供一键编译、参考文献处理、TikZ 图绘制、中间文件清理等功能。"
-	@echo "下表展示了可用的 make 命令及其对应功能："
 	@echo ""
-	@echo "┌──────────────────────────────────────────────┬────────────────────────────────────────────────────────┐"
-	@echo "│ 命令                                         │ 功能                                                   │"
-	@echo "├──────────────────────────────────────────────┼────────────────────────────────────────────────────────┤"
-	@echo "│ make                                         │ 默认：双次 xelatex 编译，确保目录、交叉引用正常生成    │"
-	@echo "│ make main                                    │ 同上                                                   │"
-	@echo "│ make main M=2                                │ 可选：含 bibtex：用于引用文献，常用于含参考文献的论文  │"
-	@echo "│ make main M=3                                │ 可选：四次 xelatex 编译，确保公式标注正确显示		│"
-	@echo "│ make tikz F=路径/文件名（不加.tex）          │ 编译单个 TikZ 图（默认路径为 pictures/tikz/）          │"
-	@echo "│ make cl                                      │ 清理中间文件（aux, log, toc 等）                       │"
-	@echo "│ make ch                                      │ 检查是否安装 xelatex 和 bibtex                         │"
-	@echo "│ make h                                       │ 打印本帮助菜单                                         │"
-	@echo "└──────────────────────────────────────────────┴────────────────────────────────────────────────────────┘"
+	@echo "本 Makefile 支持通过在 main.tex 文件中添加注释来控制编译流程。"
+	@echo ""
+	@echo "🛠️ 标记规则（写在 main.tex 顶部）："
+	@echo "   % !compile_chain = xelatex -> bibtex -> xelatex -> xelatex"
+	@echo "   % !clean_midfiles = true"
+	@echo ""
+	@echo "📌 compile_chain："
+	@echo "   - 设置编译顺序，可包含 xelatex、bibtex、biber"
+	@echo "   - 多次 xelatex 用于处理交叉引用、目录、annotated equations"
+	@echo ""
+	@echo "📌 clean_midfiles："
+	@echo "   - 若为 true，编译完成后自动删除中间文件（aux, log 等）"
+	@echo ""
+	@echo "📦 常用命令说明："
+	@echo ""
+	@echo "┌────────────────────────┬────────────────────────────────────────────┐"
+	@echo "│ 命令                   │ 功能                                       │"
+	@echo "├────────────────────────┼────────────────────────────────────────────┤"
+	@echo "│ make                   │ 默认编译，自动读取 main.tex 中的编译链     │"
+	@echo "│ make main              │ 与 make 相同，执行自定义编译链             │"
+	@echo "│ make cl                │ 清理中间文件（aux, log, toc 等）           │"
+	@echo "│ make ch                │ 检查是否安装 xelatex 和 bibtex 工具        │"
+	@echo "│ make h                 │ 打印本帮助菜单                             │"
+	@echo "└────────────────────────┴────────────────────────────────────────────┘"
+	@echo ""
+	@echo "📂 编译日志已重定向至 build.log，如失败请使用："
+	@echo "   tail -n 50 build.log"
+	@echo ""
+	@echo "📄 更多文档说明请见 README.md 或 main.tex 顶部注释区"
 
 ch:
 	@echo "─────────────────────┬──────────────────────────────────────────────────────────────────────────"

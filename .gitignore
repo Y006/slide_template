@@ -11,6 +11,7 @@
 !README.md
 !.gitignore
 !*.bib
+!tutorial.md
 
 /pictures/tikz/**/*.gz
 /pictures/tikz/**/*.aux
