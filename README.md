@@ -24,14 +24,10 @@
 
 #### 演示方法：
 
-推荐使用 [Pympress](https://github.com/Cimbali/pympress) 进行演示。
+1. 使用任意 PDF 阅读器：VScode 中的LaTeX Workshop Internal PDF Viewer 为例，在阅读器顶部选择“页面滚动”、“单页视图”和“适合页面”。
 
-## 详细的使用方法
+2. 更推荐使用 [Pympress](https://github.com/Cimbali/pympress) 进行演示。
+
+## 更详细的使用方法
 
 见 [tutorial](tutorial.md)
-
-## TODO List
-
-1. 增加对中文字体加粗的支持。
-2. 增加更多模版 frame。
-3. 解决 block 中多级列表字号不一致问题。

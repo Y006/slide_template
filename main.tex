@@ -33,6 +33,11 @@
 \usepackage{titlepage}
 \usepackage{code}
 \usepackage{UESTC}
+% 目前设置该 slide 的中文默认字体为黑体，该字体不支持粗体和斜体；选择的折中方案如下，如果不需要可以将下面两行注释掉。
+% 将 \textbf{粗体} 显示为红色
+\renewcommand{\textbf}[1]{\textcolor{red}{#1}}
+% 将 \emph{斜体} 显示为浅灰色
+\renewcommand{\emph}[1]{\textcolor{gray!90}{#1}}
 
 % ========================== 根据需要导入其他宏包 ==========================
 % 用于实现子图的宏包
@@ -77,9 +82,9 @@
 \section{文字和列表}
 
 \begin{frame}{列表}
-    在slide中，比起段落文字，更建议使用列表。\\
+    在slide中，比起段落文字，更建议使用\textbf{列表}。\\
     这是一个混合的列表：第一级使用有序列表，第二级使用无序列表。
-    不建议超过两级列表。
+    不建议超过\emph{两级列表}。
     \begin{enumerate}
         \item 第一项
         \begin{itemize}
