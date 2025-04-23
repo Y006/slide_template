@@ -4,7 +4,7 @@
 
 ## 模版展示
 
-见 [example]()
+见 [example](main.pdf)
 
 ## 快速开始
 
