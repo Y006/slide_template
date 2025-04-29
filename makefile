@@ -1,8 +1,11 @@
-.PHONY: all build report pdfcopy tikz check help h
+.PHONY: all build report pdfcopy tikz md2tex check help h
 
 TEXFILE := main.tex
 OUTDIR := build
 LOGFILE := $(OUTDIR)/compile_trace.log
+
+# Pandoc 路径设置
+PANDOC ?= your pandoc path
 
 # 一键执行
 all: build report pdfcopy
@@ -60,6 +63,25 @@ tikz:
 	rm -f $$OUTDIR/*.aux $$OUTDIR/*.log $$OUTDIR/*.synctex.gz; \
 	echo "✅ 编译完成并已清理中间文件。"
 
+# 将 Markdown 转换为 LaTeX Beamer 幻灯片（用于代码高亮）
+md2tex:
+	@echo "📄 使用方法：请将你希望放入幻灯片的代码块内容写在 code/source.md 中"
+	@echo "📝 正在使用 Pandoc ($(PANDOC)) 将 code/source.md 转换为 code/source.tex ..."
+	@if ! command -v $(PANDOC) >/dev/null 2>&1; then \
+		echo "❌ 错误：未检测到 Pandoc，请确认 $(PANDOC) 是否存在"; \
+		exit 1; \
+	fi
+	@if [ ! -f code/source.md ]; then \
+		echo "❌ 错误：未找到 code/source.md"; \
+		exit 1; \
+	fi
+	@$(PANDOC) code/source.md -t beamer -o code/source.tex --highlight-style=pygments
+	@if [ $$? -eq 0 ]; then \
+		echo "✅ 转换成功：code/source.tex 已创建"; \
+	else \
+		echo "❌ 转换失败，请检查 Markdown 内容格式"; \
+	fi
+
 # 检查你需要的工具
 check:
 	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -99,6 +121,7 @@ help:
 	@echo "│ make report            │ 从编译日志中统计 xelatex、bibtex 等工具的调用次数              │"
 	@echo "│ make pdfcopy           │ 将生成的 PDF 从 build/main.pdf 复制为 ./main.pdf               │"
 	@echo "│ make tikz F=xx         │ 编译 TikZ 子图 pictures/tikz/xx.tex，并清理中间文件            │"
+	@echo "│ make md2tex            │ 将 code/source.md 中的代码块转换为可供 Beamer 使用的代码块     │"
 	@echo "│ make check             │ 检查 latexmk/xelatex/bibtex 等工具是否安装及其版本             │"
 	@echo "│ make help 或 make h    │ 打印本帮助菜单                                                 │"
 	@echo "└────────────────────────┴────────────────────────────────────────────────────────────────┘"
