@@ -1,26 +1,3 @@
-% ==========================================================================================
-% 📌 编译配置标记（Makefile 会自动读取以下注释行）：
-%
-% ▶ 标记格式：
-%     % !<变量名> = <值>
-%
-% !compile_chain = xelatex -> bibtex -> xelatex -> xelatex -> xelatex
-%    ⤷ 设置编译链，支持的命令包括：
-%       - xelatex  编译 tex 文件
-%       - bibtex   使用 BibTeX 处理参考文献
-%       - biber    使用 Biber 处理 biblatex 引用
-% 
-% 👉 多次运行 xelatex 是为了正确处理 LaTeX 的多个特性：
-%   - 交叉引用，需要运行 2 次 xelatex 以确保所有引用都能正确解析
-%   - 使用 annotated LaTeX equations 需要运行 3 次 xelatex 以确保 tikz 标注内容的正确渲染
-%
-% !clean_midfiles = true
-%    ⤷ 编译完成后是否清理中间文件（aux, log, bbl 等）
-%
-% 👉 修改上述标记后，直接运行 `make` 即可自动执行指定流程
-% 👉 编译过程重定向到文件：build.log
-% ==========================================================================================
-
 \PassOptionsToPackage{backref=page}{hyperref}
 \documentclass[aspectratio=169]{beamer}
 

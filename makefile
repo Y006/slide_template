@@ -1,95 +1,107 @@
-TEXFILE = main.tex
-FILENAME = main
+.PHONY: all build report pdfcopy tikz check help h
 
-# 从 main.tex 读取标记
-COMPILE_CHAIN := $(shell grep '^% *!compile_chain' $(TEXFILE) | sed 's/.*= *//')
-CLEAN_MID := $(shell grep '^% *!clean_midfiles' $(TEXFILE) | sed 's/.*= *//')
+TEXFILE := main.tex
+OUTDIR := build
+LOGFILE := $(OUTDIR)/compile_trace.log
 
-# 默认目标
-main:
-	@echo "🧠 检测编译链: $(COMPILE_CHAIN)"
-	@echo "🧹 是否清理中间文件: $(CLEAN_MID)"
-	@echo "🚀 开始编译..."
+# 一键执行
+all: build report pdfcopy
 
-	@echo "$(COMPILE_CHAIN)" | sed 's/->/\n/g' | while read cmd; do \
-		cmd=$$(echo $$cmd | xargs); \
-		echo "🔧 执行指令：$$cmd"; \
-		if [ "$$cmd" = "xelatex" ]; then \
-			xelatex -halt-on-error -interaction=nonstopmode $(TEXFILE) >> build.log 2>&1; \
-		elif [ "$$cmd" = "bibtex" ]; then \
-			bibtex $(FILENAME) >> build.log 2>&1; \
-		elif [ "$$cmd" = "biber" ]; then \
-			biber $(FILENAME) >> build.log 2>&1; \
-		else \
-			echo "\033[33m⚠️ 未知命令：$$cmd\033[0m"; \
-		fi; \
-		if [ $$? -ne 0 ]; then \
-			echo "\033[31m❌ 编译阶段 $$cmd 失败\033[0m"; \
-			echo "🔍 请检查 build.log 获取详细错误信息"; \
-			exit 1; \
-		fi; \
-	done
+# 编译并记录详细日志 + 记录耗时
+build:
+	@echo "📦 正在编译 $(TEXFILE)..."
+	@if [ ! -d $(OUTDIR) ]; then \
+		echo "📁 创建目录：$(OUTDIR)"; \
+		mkdir -p $(OUTDIR); \
+	else \
+		echo "📁 目录已存在：$(OUTDIR)"; \
+	fi
+	@echo "📂 所有中间文件和 PDF 输出目录为：$(OUTDIR)/"
+	@start_time=$$(date +%s); \
+	latexmk -xelatex -verbose -outdir=$(OUTDIR) $(TEXFILE) > $(LOGFILE) 2>&1; \
+	end_time=$$(date +%s); \
+	elapsed=$$((end_time - start_time)); \
+	echo "⏱️ 编译耗时：$${elapsed} 秒" | tee -a $(LOGFILE)
 
-	@echo "✅ 编译完成！"
+# 提取工具调用信息并统计
+report:
+	@echo "📊 编译工具调用统计："
+	@if [ ! -f $(LOGFILE) ]; then \
+		echo "⚠️ 日志文件 $(LOGFILE) 不存在，请先运行 make build"; \
+		exit 1; \
+	fi
+	@grep -E 'Run number [0-9]+ of rule' $(LOGFILE) \
+		| sed 's/.*rule '\''//;s/'\''.*//' \
+		| sort | uniq -c \
+		| awk '{printf "🔧 工具：%-10s 次数：%s\n", $$2, $$1}'
 
-	@if [ "$(CLEAN_MID)" = "true" ]; then \
-		$(MAKE) cl; \
+# 复制 PDF 到根目录，命名为 main.pdf
+pdfcopy:
+	@echo "📄 正在复制 PDF..."
+	@if [ -f $(OUTDIR)/main.pdf ]; then \
+		cp $(OUTDIR)/main.pdf ./main.pdf; \
+		echo "✅ 已将 PDF 从 '$(OUTDIR)/main.pdf' 复制到根目录：./main.pdf"; \
+	else \
+		echo "❌ 未找到 '$(OUTDIR)/main.pdf'，请先运行 make build"; \
+		exit 1; \
 	fi
 
-cl:
-	@echo "🧹 正在清理中间文件..."
-	@rm -f $(FILENAME).{aux,bbl,blg,log,nav,out,snm,toc,vrb,synctex.gz,brf}
-	@echo "✅ 清理完成！"
+# 编译 TikZ 子图：make tikz F=文件名（不含.tex，默认路径 pictures/tikz）
+tikz:
+	@if [ -z "$(F)" ]; then \
+		echo "❌ 请输入 TikZ 文件路径：make tikz F=相对路径/文件名（不含.tex）"; \
+		exit 1; \
+	fi
+	@TEX=pictures/tikz/$(F).tex; \
+	OUTDIR=$$(dirname $$TEX); \
+	echo "🛠️  正在编译 $$TEX ..."; \
+	xelatex -output-directory=$$OUTDIR $$TEX > /dev/null || \
+	( echo "\033[31m❌ 编译失败，终止 Make\033[0m"; exit 1 ); \
+	rm -f $$OUTDIR/*.aux $$OUTDIR/*.log $$OUTDIR/*.synctex.gz; \
+	echo "✅ 编译完成并已清理中间文件。"
 
-h:
+# 检查你需要的工具
+check:
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@echo " 工具                │ 状态"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+	@for tool in latexmk xelatex pdflatex lualatex bibtex biber makeindex; do \
+		if command -v $$tool >/dev/null 2>&1; then \
+			if [ "$$tool" = "makeindex" ]; then \
+				printf " %-20s│ ✅ 已安装：%s\n" "$$tool" "MakeIndex (版本未知，--version 不支持)"; \
+			else \
+				version=$$($$tool --version 2>/dev/null | head -n 1); \
+				printf " %-20s│ ✅ 已安装：%s\n" "$$tool" "$$version"; \
+			fi \
+		else \
+			printf " %-20s│ ❌ 未安装\n" "$$tool"; \
+		fi; \
+	done
+	@echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# 主帮助命令
+help:
 	@echo ""
 	@echo "📘 LaTeX Makefile 使用指南"
 	@echo ""
-	@echo "本 Makefile 支持通过在 main.tex 文件中添加注释来控制编译流程。"
+	@echo "💡 已通过 VSCode 配置 tasks.json，可使用快捷键 Cmd+Shift+B 快速构建项目"
 	@echo ""
-	@echo "🛠️ 标记规则（写在 main.tex 顶部）："
-	@echo "   % !compile_chain = xelatex -> bibtex -> xelatex -> xelatex"
-	@echo "   % !clean_midfiles = true"
+	@echo "📂 所有中间文件和 PDF 输出目录为：build/"
+	@echo "📄 编译日志已重定向至：build/compile_trace.log"
 	@echo ""
-	@echo "📌 compile_chain："
-	@echo "   - 设置编译顺序，可包含 xelatex、bibtex、biber"
-	@echo "   - 多次 xelatex 用于处理交叉引用、目录、annotated equations"
+	@echo "📦 可选命令说明："
 	@echo ""
-	@echo "📌 clean_midfiles："
-	@echo "   - 若为 true，编译完成后自动删除中间文件（aux, log 等）"
-	@echo ""
-	@echo "📦 常用命令说明："
-	@echo ""
-	@echo "┌────────────────────────┬────────────────────────────────────────────┐"
-	@echo "│ 命令                   │ 功能                                       │"
-	@echo "├────────────────────────┼────────────────────────────────────────────┤"
-	@echo "│ make                   │ 默认编译，自动读取 main.tex 中的编译链     │"
-	@echo "│ make main              │ 与 make 相同，执行自定义编译链             │"
-	@echo "│ make cl                │ 清理中间文件（aux, log, toc 等）           │"
-	@echo "│ make ch                │ 检查是否安装 xelatex 和 bibtex 工具        │"
-	@echo "│ make h                 │ 打印本帮助菜单                             │"
-	@echo "└────────────────────────┴────────────────────────────────────────────┘"
-	@echo ""
-	@echo "📂 编译日志已重定向至 build.log，如失败请使用："
-	@echo "   tail -n 50 build.log"
-	@echo ""
-	@echo "📄 更多文档说明请见 README.md 或 main.tex 顶部注释区"
+	@echo "┌────────────────────────┬────────────────────────────────────────────────────────────────┐"
+	@echo "│ 命令                   │ 功能                                                           │"
+	@echo "├────────────────────────┼────────────────────────────────────────────────────────────────┤"
+	@echo "│ make 或 make all       │ 编译文档，统计工具调用次数，并复制 PDF 到根目录                │"
+	@echo "│ make build             │ 使用 latexmk 编译 main.tex，输出到 build 文件夹                │"
+	@echo "│ make report            │ 从编译日志中统计 xelatex、bibtex 等工具的调用次数              │"
+	@echo "│ make pdfcopy           │ 将生成的 PDF 从 build/main.pdf 复制为 ./main.pdf               │"
+	@echo "│ make tikz F=xx         │ 编译 TikZ 子图 pictures/tikz/xx.tex，并清理中间文件            │"
+	@echo "│ make check             │ 检查 latexmk/xelatex/bibtex 等工具是否安装及其版本             │"
+	@echo "│ make help 或 make h    │ 打印本帮助菜单                                                 │"
+	@echo "└────────────────────────┴────────────────────────────────────────────────────────────────┘"
 
-ch:
-	@echo "─────────────────────┬──────────────────────────────────────────────────────────────────────────"
-	@echo " 工具                │ 状态                                                                     "
-	@echo "─────────────────────┼──────────────────────────────────────────────────────────────────────────"
-	@if command -v xelatex >/dev/null 2>&1; then \
-		printf " %-20s│ 已安装：%s\n" "xelatex" "$$(xelatex --version | head -n 1)"; \
-	else \
-		echo " xelatex             │ ❌ 未找到，请安装 TeX Live 或 MacTeX                                     "; \
-		exit 1; \
-	fi
-	@if command -v bibtex >/dev/null 2>&1; then \
-		printf " %-20s│ 已安装：%s\n" "bibtex" "$$(bibtex --version | head -n 1)"; \
-	else \
-		echo " bibtex              │ ❌ 未找到，参考文献功能将无法使用                                          "; \
-		exit 1; \
-	fi
-	@echo "─────────────────────┴──────────────────────────────────────────────────────────────────────────"
-
+# 别名目标
+h: help

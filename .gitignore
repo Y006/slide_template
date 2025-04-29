@@ -18,3 +18,5 @@
 /pictures/tikz/**/*.log
 
 !makefile
+
+!.vscode
