@@ -4,7 +4,8 @@
 
 ## 模版展示
 
-见 [example](main.pdf)
+<!-- ![效果预览](https://drive.google.com/file/d/1Wdcnd10IIznqj6fpoy0PB7HkBTvmU6Dh/preview) -->
+[效果预览](https://y006.github.io/slide_template/main.pdf)
 
 ## 快速开始
 
