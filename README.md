@@ -72,6 +72,21 @@
 
        使用 `latexmk` 编译文件 `main.tex`。
 
+5. 使用 pympress 进行演示
+
+    按照 [pympress](https://github.com/Cimbali/pympress) 的指南安装 pympress，检查安装情况：
+
+    ```shell
+    pympress --version
+    ```
+
+    在根目录下使用 pympress 进行演示：
+
+    ```shell
+    pympress main.pdf
+    ```
+
+
 ## 更详细的使用方法
 
 见 [tutorial_v1](tutorial_v1.md)
