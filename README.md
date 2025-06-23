@@ -48,6 +48,8 @@
        ```
 
        可以运行 `make h` 查看 `makefile` 的使用帮助。
+       
+       本项目已配置 `.vscode/tasks.json`，支持使用 VSCode 快捷键 `Cmd+Shift+B`（或 `Ctrl+Shift+B`）快速触发 make 编译。
 
     2. 使用 latex 编译链进行编译
 
