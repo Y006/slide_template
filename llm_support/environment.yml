@@ -1,0 +1,9 @@
+name: openai
+channels:
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+dependencies:
+  - python=3.11
+  - openai
+  - sfe1ed40::tiktoken
+prefix: /opt/homebrew/anaconda3/envs/openai

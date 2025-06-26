@@ -1,5 +1,9 @@
 .PHONY: all build report pdfcopy tikz md2tex check help h
 
+# Python 环境和日志分析脚本路径
+PYTHON := /opt/homebrew/anaconda3/envs/openai/bin/python
+LOG_ANALYZER := /Users/qiujinyu/Documents/slide/slide_template/llm_support/latex_log_openai.py
+
 TEXFILE := main.tex
 OUTDIR := build
 LOGFILE := $(OUTDIR)/compile_trace.log
@@ -48,6 +52,12 @@ pdfcopy:
 		echo "❌ 未找到 '$(OUTDIR)/main.pdf'，请先运行 make build"; \
 		exit 1; \
 	fi
+
+# 使用 ai 工具进行日志分析
+ai:
+	@echo "🧠 正在使用 AI 分析日志..."
+	@echo "📄 日志绝对路径为：$$(realpath $(LOGFILE))"
+	@$(PYTHON) $(LOG_ANALYZER) $$(realpath $(LOGFILE)) || echo "❌ 日志分析失败"
 
 # 编译 TikZ 子图：make tikz F=文件名（不含.tex，默认路径 pictures/tikz）
 tikz:

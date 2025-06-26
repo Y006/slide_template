@@ -13,6 +13,7 @@
 !*.bib
 !tutorial.md
 !tutorial_v1.md
+!llm_support
 
 /pictures/tikz/**/*.gz
 /pictures/tikz/**/*.aux
